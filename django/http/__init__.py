@@ -28,7 +28,7 @@ import Cookie
 _morsel_supports_httponly = Cookie.Morsel._reserved.has_key('httponly')
 # Some versions of Python 2.7 and later won't need this encoding bug fix:
 _cookie_encodes_correctly = Cookie.SimpleCookie().value_encode(';') == (';', '"\\073"')
-# See ticket #13007, http://bugs.python.org/issue2193 and http://trac.edgewall.org/ticket/2256
+# See ticketJ #13007, http://bugs.python.org/issue2193 and http://trac.edgewall.org/ticket/2256
 _tc = Cookie.SimpleCookie()
 _tc.load('f:oo')
 _cookie_allows_colon_in_names = 'Set-Cookie: f:oo=' in _tc.output()
@@ -635,27 +635,6 @@ class HttpResponse(object):
         if not self._is_string:
             raise Exception("This %s instance cannot tell its position" % self.__class__)
         return sum([len(chunk) for chunk in self._container])
-
-
-class JsonResponse(HttpResponse):
-    """
-    Returns a JSON reponse.
-    Allows different encoders/decoders to be used
-    by passing an optional arg called `encoder`,
-    otherwise uses default.
-    
-    """
-    def __init__(self, content, status=None, encoder=None):
-        if encoder is not None:
-            content=json.dumps(content, cls=encoder),
-        else:
-            content=json.dumps(content)
-        super(JsonResponse, self).__init__(
-            content=content,
-            mimetype='application/json',
-            status=status,
-            content_type='application/json',
-            )
 
 
 class HttpResponseRedirect(HttpResponse):
